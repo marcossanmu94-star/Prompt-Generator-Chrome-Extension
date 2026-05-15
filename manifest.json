@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Prompt Generator",
+  "version": "1.0",
+  "description": "Automated prompt generator to store and retrieve text templates.",
+  "permissions": ["sidePanel", "storage", "clipboardWrite"],
+  "action": {
+    "default_title": "Open Prompt Generator"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "index.html"
+  }
+}

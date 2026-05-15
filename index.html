@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Generator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Container uses 'show-main' by default on mobile so if a project is selected it hides the sidebar -->
+  <div id="app-container" class="app-container show-main">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>Projects</h2>
+        <button id="new-project-btn" class="btn primary-btn">+ New</button>
+      </div>
+      <ul id="project-list" class="project-list">
+        <!-- Projects will be rendered here -->
+      </ul>
+      <div class="sidebar-footer">
+        <button id="import-btn" class="btn secondary-btn">Import</button>
+        <button id="export-btn" class="btn secondary-btn">Export</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <div id="no-project-view" class="view hidden">
+        <div class="empty-state">
+          <button id="mobile-back-to-projects-btn" class="btn secondary-btn mobile-only" style="margin-bottom: 20px;">◀ View Projects</button>
+          <h3>No Project Selected</h3>
+          <p>Select a project from the sidebar or create a new one.</p>
+        </div>
+      </div>
+
+      <div id="project-view" class="view hidden">
+        <header class="project-header">
+          <div class="header-left">
+            <button id="mobile-back-btn" class="btn icon-btn mobile-only" title="Back to Projects">◀</button>
+            <h1 id="current-project-name" contenteditable="true" spellcheck="false">Project Name</h1>
+          </div>
+          <div class="header-actions">
+            <button id="open-full-screen-btn" class="btn icon-btn mobile-only" title="Open Full Screen">⤢</button>
+            <button id="open-side-panel-btn" class="btn icon-btn desktop-only" title="Open in Side Panel">◧</button>
+            <button id="delete-project-btn" class="btn danger-btn">Delete</button>
+          </div>
+        </header>
+
+        <section class="variables-section section-glass">
+          <div class="section-header">
+            <h2>Variables</h2>
+            <div class="header-actions">
+              <button id="new-task-btn" class="btn text-btn">Reset Values</button>
+              <button id="create-variable-btn" class="btn secondary-btn">+ Var</button>
+            </div>
+          </div>
+          <div id="variables-container" class="variables-container">
+            <!-- Variables will be rendered here -->
+          </div>
+        </section>
+
+        <section class="templates-section section-glass">
+          <div class="section-header">
+            <h2>Templates</h2>
+            <button id="create-template-btn" class="btn secondary-btn">+ Template</button>
+          </div>
+          <div id="templates-container" class="templates-container">
+            <!-- Templates will be rendered here -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Template for Variable Item -->
+  <template id="variable-template">
+    <div class="variable-item glass-card compact-card">
+      <div class="item-header">
+        <div class="item-move-actions">
+          <button class="btn icon-btn move-up-btn" title="Move Up" style="padding:2px; font-size:0.7rem;">▲</button>
+          <button class="btn icon-btn move-down-btn" title="Move Down" style="padding:2px; font-size:0.7rem;">▼</button>
+        </div>
+        <span class="variable-name item-name" contenteditable="true" spellcheck="false"></span>
+        <input type="text" class="quick-input variable-quick-input" placeholder="Value..." />
+        <div class="item-header-actions">
+          <button class="btn icon-btn expand-btn" title="Toggle Expand">▼</button>
+        </div>
+      </div>
+      <div class="item-body collapsible-body">
+        <div class="body-toolbar">
+          <button class="btn icon-btn clear-var-btn" title="Clear Value">⟲ Clear</button>
+          <button class="btn icon-btn delete-var-btn" title="Delete Variable">✖ Delete</button>
+        </div>
+        <textarea class="variable-input" placeholder="Enter full value..."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <!-- Template for Prompt Template Item -->
+  <template id="prompt-template-template">
+    <div class="template-item glass-card compact-card">
+      <div class="item-header">
+        <div class="item-move-actions">
+          <button class="btn icon-btn move-up-btn" title="Move Up" style="padding:2px; font-size:0.7rem;">▲</button>
+          <button class="btn icon-btn move-down-btn" title="Move Down" style="padding:2px; font-size:0.7rem;">▼</button>
+        </div>
+        <span class="template-name item-name" contenteditable="true" spellcheck="false"></span>
+        <button class="btn copy-btn primary-btn quick-copy-btn">Copy</button>
+        <div class="item-header-actions">
+          <button class="btn icon-btn expand-btn" title="Toggle Expand">▼</button>
+        </div>
+      </div>
+      <div class="item-body collapsible-body">
+        <div class="body-toolbar">
+          <button class="btn icon-btn delete-tpl-btn" title="Delete Template">✖ Delete</button>
+        </div>
+        <div class="template-variables-insert">
+          <!-- Variable buttons will be added here dynamically -->
+        </div>
+        <textarea class="template-content" placeholder="Write your prompt here..."></textarea>
+      </div>
+    </div>
+  </template>
+
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
