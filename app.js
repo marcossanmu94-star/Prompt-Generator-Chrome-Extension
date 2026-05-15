@@ -161,10 +161,16 @@ function setupEventListeners() {
   });
 
   els.exportBtn.addEventListener('click', () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.projects, null, 2));
+    const project = getActiveProject();
+    if (!project) {
+      alert('Please select a project to export.');
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify([project], null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "prompt_projects.json");
+    const safeName = project.name.replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'project';
+    downloadAnchorNode.setAttribute("download", `${safeName}.json`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -181,15 +187,35 @@ function setupEventListeners() {
        reader.onload = readerEvent => {
           try {
             const content = readerEvent.target.result;
-            const imported = JSON.parse(content);
-            if (Array.isArray(imported)) {
-               state.projects = imported;
-               state.activeProjectId = state.projects.length > 0 ? state.projects[0].id : null;
-               saveState();
-               showMainContent();
+            let imported = JSON.parse(content);
+            if (!Array.isArray(imported)) {
+              imported = [imported];
+            }
+            
+            imported.forEach(impProj => {
+              if (!impProj.name || !impProj.variables || !impProj.templates) return;
+              
+              impProj.id = generateId(); // Prevent ID collisions
+              
+              let originalName = impProj.name;
+              let newName = originalName;
+              let counter = 1;
+              while (state.projects.some(p => p.name === newName)) {
+                newName = `${originalName} (${counter})`;
+                counter++;
+              }
+              impProj.name = newName;
+              
+              state.projects.push(impProj);
+            });
+            
+            if (imported.length > 0) {
+              state.activeProjectId = imported[0].id; // Select the first imported project
+              saveState();
+              showMainContent();
             }
           } catch(err) {
-            alert('Invalid file format');
+            alert('Invalid file format or corrupt project file.');
           }
        }
     }
